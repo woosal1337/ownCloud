@@ -240,3 +240,5 @@ $sudo nano /var/www/owncloud/config/config.php
 'port' => 0,`
  ),
 ```
+
+Reference: https://www.avoiderrors.com/install-owncloud-on-raspberry-pi-4-2/
