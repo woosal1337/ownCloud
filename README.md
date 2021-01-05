@@ -6,6 +6,8 @@
 $sudo raspi-config
 ```
 
+<br>
+
 The following changes needs to be made in the Raspberry Pi configuration:
 
 A. Change user password
@@ -13,6 +15,8 @@ A. Change user password
 
 B. Change locale to en_US.UTF8
 Select “Localisation Options” –> “Change Locale”
+
+<br>
 
 ### Update the Raspberry Pi and its packages
 
@@ -23,20 +27,28 @@ $sudo su
 $apt update && apt upgrade
 ```
 
+<br>
+
 ### Install PHP
 ```
 $sudo apt-get install php php-gd php-sqlite3 php-curl libapache2-mod-php
 ```
+
+<br>
 
 ### Install SMB Client
 ```
 $sudo apt-get install smbclient
 ```
 
+<br>
+
 ### PHP extensions needed to use ownCloud
 ```
 $sudo apt-get install php-mysql php-mbstring php-gettext php-intl php-redis php-imagick php-igbinary php-gmp php-curl php-gd php-zip php-imap php-ldap php-bz2 php-phpseclib php-xml
 ```
+
+<br>
 
 ### Register ownCloud trusted key
 ```
@@ -47,6 +59,8 @@ $wget -nv https://download.owncloud.org/download/repositories/production/Debian_
 $sudo apt-key add - < Release.key
 ```
 
+<br>
+
 ### Add the official ownCloud package repository to Raspbian
 ```
 $echo 'deb http://download.owncloud.org/download/repositories/production/Debian_9.0/ /' > /etc/apt/sources.list.d/owncloud.list
@@ -55,20 +69,28 @@ $echo 'deb http://download.owncloud.org/download/repositories/production/Debian_
 $apt-get update
 ```
 
+<br>
+
 ### Enable the Apache mod_rewrite module
 ```
 $sudo a2enmod rewrite
 ```
+
+<br>
 
 ### Install Maria Database
 ```
 $sudo apt install mariadb-server mariadb-client
 ```
 
+<br>
+
 ### Configure the database and user:
 ```
 $mysql -u root -p
 ```
+
+<br>
 
 ### You’ll be prompted to enter the Pi User password. Then execute the underneath commands in blue:
 ```
@@ -88,10 +110,13 @@ MariaDB [(none)]> exit;
  Bye
  ```
 
+<br> <br>
+
 # Install ownCloud
 ```
 $sudo apt install owncloud-files
 ```
+<br>
 
 ## Configure Apache
 ### Edit the Apache default site configuration file
@@ -102,25 +127,37 @@ $sudo nano /etc/apache2/sites-enabled/000-default.conf
 <br>
 <a>Then save and exit</a>
 
+<br>
+
 ### Restart apache:
 ```
 $sudo systemctl restart apache2
 ```
 
+<br>
+
 ## Edit fstab:
 ### Also we meed to get the PARTUUID of the attached hard drive ending with -01 so the Pi can remember this drive.
+
+<br>
 
 ### To find the PARTUUID:
 ```
 $sudo blkid
 ```
 
+<br>
+
 ### Here you’ll find the PARTUUID ending with -01
+
+<br>
 
 ### Edit fstab:
 ```
 $sudo nano /etc/fstab
 ```
+
+<br>
 
 ### In my case the following line is added:
 ```
@@ -129,17 +166,25 @@ $PARTUUID=424a1e9f-01 /media/data ext4 defaults,noatime 0 2
 
 ``Then save and exit``
 
+<br>
+
 ## Create data directory for ownCloud
 ```
 $mkdir /media/data/owncloud
 ```
+
+<br>
 
 ## Change owner and group permissions to www-data
 ```
 $sudo chown www-data:www-data -R /media/data/owncloud
 ```
 
+<br><br>
+
 # Basic First Access Setup
+
+<br>
 
 ## Get the IP from the Raspberry Pi
 
@@ -165,6 +210,8 @@ Server: localhost
 5. Click on ‘Finish Setup’ button. That’s it. We’re good to go. Owncloud 10 installed on Raspbian Stretch is now ready for use.
 ```
 
+<br>
+
 # External Access
 ### To allow devices like your phone or tablet to access your cloud from anywhere in the world with internet access you must Enable SSL then enable port forward.
 
@@ -188,7 +235,11 @@ $sudo a2ensite default-ssl
 $sudo service apache2 restart
 ```
 
+<br>
+
 ## Port Forward
+
+<br>
 
 ### Log into your router and get the WAN IP address:
 ### Now we need to add the WAN IP to your trusted IP list and not to be overwritten by ownCloud. To do this open the Owncloud config file, enter:
@@ -197,13 +248,19 @@ $sudo service apache2 restart
 $sudo nano /var/www/owncloud/config/config.php
 ```
 
+<br>
+
 ### Here add the WAN IP (External IP address) you just got from the router or Google to the trusted domains array. Your new entry should look something like this:
 
 ```
 $1 => 'xxx.xxx.xxx.xxx',
 ```
 
+<br>
+
 ### X are just placeholders. Replace the X’s with the WAN IP Address.
+
+<br>
 
 ### Now update the URL of the overwrite.cli.url line with your WAN IP Address. It should look something like this:
 
@@ -211,12 +268,19 @@ $1 => 'xxx.xxx.xxx.xxx',
 $'overwrite.cli.url' => 'https://xxx.xxx.xxx.xxx/owncloud',
 ```
 
+<br>
+
 ### Once done save and exit the the config.php.
+
+<br>
 
 ### Log into your router and navigate to the port forward section.
 
+<br>
+
 ### Port forward SSL port 443 to the Raspberry pi internal IP (LAN IP)  address and save settings.
 
+<br>
 
 ### Your RPI ownCloud is ready to be accessed externally (WAN) and from your devices just download the ownCloud App and enter: “https:// WAN IP Address” on the address bar or devices. below is an example:
 
@@ -226,10 +290,14 @@ $'overwrite.cli.url' => 'https://xxx.xxx.xxx.xxx/owncloud',
 ```
 $apt install redis-server php-redis
 ```
+<br>
+
 ### Edit config.php:
 ```
 $sudo nano /var/www/owncloud/config/config.php
 ```
+<br>
+
 ### add the following:
 ```
 'memcache.locking' => '\OC\Memcache\Redis',
